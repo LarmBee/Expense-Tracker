@@ -5,6 +5,7 @@ const NewExpense = (props) => {
 	const [enteredTitle, setEnteredTitle] = useState("");
 	const [enteredAmount, setEnteredAmount] = useState("");
 	const [enteredDate, setEnteredDate] = useState("");
+	const[isEditing, setIsEditing]=useState(false)
 
 	const titleChangeHandler = (event) => {
 		setEnteredTitle(event.target.value);
@@ -28,7 +29,7 @@ const NewExpense = (props) => {
 
 	const expenseData = {
 		title: enteredTitle,
-		amount: enteredAmount,
+		amount: +enteredAmount,
 		date: new Date(enteredDate),
 	};
 
@@ -38,11 +39,21 @@ const NewExpense = (props) => {
 			id:Math.random().toString()
 		}
 		props.onAddExpense(expenseData1)
+		setIsEditing(false)
+	}
+
+	const startEditingHandler=()=>{
+		setIsEditing(true)
+	}
+
+	const stopEditingHandler=()=>{
+		setIsEditing(false)
 	}
 
 	return (
 		<div className="new-expense">
-			<form onSubmit={submitHandler}>
+			{!isEditing && <button onClick={startEditingHandler}>Add New Expense</button>}
+			 {isEditing && <form onSubmit={submitHandler}>
 				<div className="new-expense__controls">
 					<div className="new-expense__control">
 						<label>Title</label>
@@ -73,12 +84,13 @@ const NewExpense = (props) => {
 						/>
 					</div>
 					<div className="new-expense__actions">
+						<button type="button" onClick={stopEditingHandler}>Cancel</button>
 						<button type="submit">Add Expense</button>
 					</div>
 				</div>
-			</form>
+			</form>}
 		</div>
-	);
+		);
 };
 
 export default NewExpense;
